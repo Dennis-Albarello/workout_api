@@ -84,8 +84,8 @@ add_pagination(router)
 
 
 @router.get(
-    '/{id}', 
-    summary='Consulta um Atleta pelo id',
+    '/{id}/{nome}/{cpf}', 
+    summary='Consulta um Atleta pelo id, nome ou cpf',
     status_code=status.HTTP_200_OK,
     response_model=AtletaOut,
 )
@@ -97,15 +97,15 @@ async def get(id: UUID4, db_session: DatabaseDependency) -> AtletaOut:
     if not atleta:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, 
-            detail=f'Atleta não encontrado no id: {id}'
+            detail=f'Atleta não encontrado no id/nome/cpf: {id}{nome}{cpf}'
         )
     
     return atleta
 
 
 @router.patch(
-    '/{id}', 
-    summary='Editar um Atleta pelo id',
+    '/{id}/{nome}/{cpf}', 
+    summary='Editar um Atleta pelo id, nome ou cpf',
     status_code=status.HTTP_200_OK,
     response_model=AtletaOut,
 )
@@ -117,7 +117,7 @@ async def patch(id: UUID4, db_session: DatabaseDependency, atleta_up: AtletaUpda
     if not atleta:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, 
-            detail=f'Atleta não encontrado no id: {id}'
+            detail=f'Atleta não encontrado no id/nome/cpf: {id}{nome}{cpf}'
         )
     
     atleta_update = atleta_up.model_dump(exclude_unset=True)
@@ -131,7 +131,7 @@ async def patch(id: UUID4, db_session: DatabaseDependency, atleta_up: AtletaUpda
 
 
 @router.delete(
-    '/{id}', 
+    '/{id}/{nome}/{cpf}', 
     summary='Deletar um Atleta pelo id',
     status_code=status.HTTP_204_NO_CONTENT
 )
@@ -143,7 +143,7 @@ async def delete(id: UUID4, db_session: DatabaseDependency) -> None:
     if not atleta:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, 
-            detail=f'Atleta não encontrado no id: {id}'
+            detail=f'Atleta não encontrado no id/nome/cpf: {id}{nome}{cpf}'
         )
     
     await db_session.delete(atleta)
